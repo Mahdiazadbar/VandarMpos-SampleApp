@@ -28,15 +28,9 @@ import io.vandar.mpos.transaction.connection.interfaces.SerialPinCountEnterListe
 public abstract class BaseActivity extends AppCompatActivity  {
 
 
-    protected static final int MULTIPLE_PERMISSIONS_REQUEST_CODE = 12;
-    public static boolean isStopSerial;
-    public static boolean isBeforSerialInjectKey;
     protected static Transaction transaction;
     protected static BBDeviceController.ConnectionMode connectionMode;
-    static String merchantID;
-    static String terminalID;
     private static VandarConnectManagerBBPos vandarConnectManagerBBPos;
-    private static boolean isSetScreenSaver = false;
 
 
     public static Transaction getTransaction() {
@@ -63,9 +57,6 @@ public abstract class BaseActivity extends AppCompatActivity  {
             transaction = new Transaction(this);
 
         vandarConnectManagerBBPos = new VandarConnectManagerBBPos(this);
-
-
-
 
 
 
