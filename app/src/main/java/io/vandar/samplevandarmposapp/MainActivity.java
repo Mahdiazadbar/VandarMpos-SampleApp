@@ -1,43 +1,84 @@
 package io.vandar.samplevandarmposapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.bbpos.bbdevice.BBDeviceController;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
+import java.util.List;
+
 import io.vandar.mpos.transaction.Interfaces.BalanceTransactionListener;
 import io.vandar.mpos.transaction.Interfaces.BuyTransActionListener;
 import io.vandar.mpos.transaction.Interfaces.TransactionListener;
-import io.vandar.mpos.transaction.Transaction;
 import io.vandar.mpos.transaction.connection.errors.CheckCardError;
 import io.vandar.mpos.transaction.connection.errors.GetPhoneNumberError;
 import io.vandar.mpos.transaction.connection.errors.PinEntryError;
 import io.vandar.mpos.transaction.model.VandarBalanceResponse;
 import io.vandar.mpos.transaction.model.VandarBuyResponse;
 
-public class MainActivity extends BaseActivity implements TransactionListener, BalanceTransactionListener, BuyTransActionListener {
+public class MainActivity extends BaseActivity implements TransactionListener, BalanceTransactionListener, BuyTransActionListener, MultiplePermissionsListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        Dexter.withActivity(this)
+                .withPermissions(Manifest.permission.ACCESS_COARSE_LOCATION)
+                .withListener(this)
+                .check();
+
+
+    }
+
+
+    @Override
+    public void onPermissionsChecked(MultiplePermissionsReport report) {
+        initView();
+    }
+
+
+    private void initView() {
+
         findViewById(R.id.connect).setOnClickListener(v -> {
-            startActivity(new Intent(this, ConnectionActivity.class));
+            if (getBBDeviceController().getConnectionMode().equals(BBDeviceController.ConnectionMode.BLUETOOTH))
+                startActivity(new Intent(this, DeviceInfoActivity.class));
+            else
+                startActivity(new Intent(this, ConnectionActivity.class));
         });
 
 
         findViewById(R.id.balance).setOnClickListener(v -> {
-            getTransaction().balance(this,this);
+            if (getBBDeviceController().getConnectionMode().equals(BBDeviceController.ConnectionMode.BLUETOOTH))
+                getTransaction().balance(this, this);
+            else
+                startActivity(new Intent(this, ConnectionActivity.class));
         });
 
         findViewById(R.id.buy).setOnClickListener(v -> {
-            getTransaction().saleTransAction(this,this,"1000");
+            if (getBBDeviceController().getConnectionMode().equals(BBDeviceController.ConnectionMode.BLUETOOTH))
+                getTransaction().saleTransAction(this, this, "1000");
+            else
+                startActivity(new Intent(this, ConnectionActivity.class));
         });
 
 
     }
+
+
+    @Override
+    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+    }
+
 
     @Override
     public void onWaitingAcceptAmount() {
@@ -112,4 +153,6 @@ public class MainActivity extends BaseActivity implements TransactionListener, B
         Toast.makeText(this, "BalanceTransactionFail", Toast.LENGTH_SHORT).show();
 
     }
+
+
 }

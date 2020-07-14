@@ -14,8 +14,8 @@ import com.bbpos.bbdevice.BBDeviceController;
 
 import java.util.List;
 
-import io.vandar.mpos.transaction.Transaction;
-import io.vandar.mpos.transaction.connection.VandarConnectManagerBBPos;
+import io.vandar.mpos.transaction.VandarTransactionManager;
+import io.vandar.mpos.transaction.connection.VandarConnectionManager;
 import io.vandar.mpos.transaction.connection.interfaces.BTConnectListener;
 import io.vandar.mpos.transaction.connection.interfaces.BTDisconnectListener;
 import io.vandar.mpos.transaction.connection.interfaces.DeviceInfoListener;
@@ -28,13 +28,13 @@ import io.vandar.mpos.transaction.connection.interfaces.SerialPinCountEnterListe
 public abstract class BaseActivity extends AppCompatActivity  {
 
 
-    protected static Transaction transaction;
+    protected static VandarTransactionManager transactionManager;
     protected static BBDeviceController.ConnectionMode connectionMode;
-    private static VandarConnectManagerBBPos vandarConnectManagerBBPos;
+    private static VandarConnectionManager vandarConnectionManager;
 
 
-    public static Transaction getTransaction() {
-        return transaction;
+    public static VandarTransactionManager getTransaction() {
+        return transactionManager;
     }
 
 
@@ -44,7 +44,7 @@ public abstract class BaseActivity extends AppCompatActivity  {
     }
 
     public static BBDeviceController getBBDeviceController() {
-        return VandarConnectManagerBBPos.getBbDeviceController();
+        return VandarConnectionManager.getBbDeviceController();
 
     }
 
@@ -53,10 +53,10 @@ public abstract class BaseActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
 
 
-        if (transaction == null)
-            transaction = new Transaction(this);
+        if (transactionManager == null)
+            transactionManager = new VandarTransactionManager(this);
 
-        vandarConnectManagerBBPos = new VandarConnectManagerBBPos(this);
+        vandarConnectionManager = new VandarConnectionManager(this);
 
 
 
@@ -65,66 +65,66 @@ public abstract class BaseActivity extends AppCompatActivity  {
 
 
     public ArrayAdapter<String> getArrayAdapter() {
-        return VandarConnectManagerBBPos.getArrayAdapter();
+        return VandarConnectionManager.getArrayAdapter();
     }
 
     public void setArrayAdapter(ArrayAdapter<String> arrayAdapter) {
-        VandarConnectManagerBBPos.setArrayAdapter(arrayAdapter);
+        VandarConnectionManager.setArrayAdapter(arrayAdapter);
     }
 
     public List<BluetoothDevice> getFoundedDevice() {
-        return VandarConnectManagerBBPos.getFoundDevices();
+        return VandarConnectionManager.getFoundDevices();
     }
 
 
     public String[] getDeviceName() {
-        return vandarConnectManagerBBPos.DEVICE_NAMES;
+        return vandarConnectionManager.DEVICE_NAMES;
     }
 
 
     public void startGetPhoneNumber(PhoneNumberListener phoneNumberListener) {
-        vandarConnectManagerBBPos.startGetPhoneNumber(phoneNumberListener);
+        vandarConnectionManager.startGetPhoneNumber(phoneNumberListener);
     }
 
     public void addBTConnectListener(BTConnectListener btConnectListener) {
-        vandarConnectManagerBBPos.addBTConnectListener(btConnectListener);
+        vandarConnectionManager.addBTConnectListener(btConnectListener);
 
     }
 
 
     public void addBTDisconnectListener(BTDisconnectListener btDisconnectListener) {
-        vandarConnectManagerBBPos.addBTDisconnectListener(btDisconnectListener);
+        vandarConnectionManager.addBTDisconnectListener(btDisconnectListener);
 
     }
 
     public void addSerialConnectListener(SerialConnectListener serialConnectListener) {
-        vandarConnectManagerBBPos.addSerialConnectListener(serialConnectListener);
+        vandarConnectionManager.addSerialConnectListener(serialConnectListener);
     }
 
 
     public void addSerialDisconnectListener(SerialDisconnectListener serialDisconnectListener) {
-        vandarConnectManagerBBPos.addSerialDisConnectListener(serialDisconnectListener);
+        vandarConnectionManager.addSerialDisConnectListener(serialDisconnectListener);
     }
 
 
     public void addDeviceInfoListener(DeviceInfoListener deviceInfoListener) {
-        vandarConnectManagerBBPos.addDeviceInfoListener(deviceInfoListener);
+        vandarConnectionManager.addDeviceInfoListener(deviceInfoListener);
     }
 
     public void stopConnection() {
-        vandarConnectManagerBBPos.stopConnection();
+        vandarConnectionManager.stopConnection();
     }
 
     public void setDefaultDevice() {
-        vandarConnectManagerBBPos.setDefaultDevice();
+        vandarConnectionManager.setDefaultDevice();
     }
 
     public void removeDefaultDevice() {
-        vandarConnectManagerBBPos.removeDefaultDevice();
+        vandarConnectionManager.removeDefaultDevice();
     }
 
     public void turnOnBluetooth() {
-        vandarConnectManagerBBPos.turnOnBluetooth();
+        vandarConnectionManager.turnOnBluetooth();
     }
 
 
@@ -142,13 +142,13 @@ public abstract class BaseActivity extends AppCompatActivity  {
 
 
     public void startPrint(byte[] paperReceiptData) {
-        vandarConnectManagerBBPos.startPrint(paperReceiptData);
+        vandarConnectionManager.startPrint(paperReceiptData);
 
     }
 
 
     public void setSerialPinEnterListener(SerialPinCountEnterListener listener) {
-        vandarConnectManagerBBPos.setSerialPinEnterListener(listener);
+        vandarConnectionManager.setSerialPinEnterListener(listener);
     }
 
 

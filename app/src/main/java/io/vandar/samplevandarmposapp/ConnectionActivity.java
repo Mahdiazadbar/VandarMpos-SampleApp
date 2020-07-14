@@ -88,7 +88,7 @@ public class ConnectionActivity extends BaseActivity implements KeyChargerListen
 
     private void keyCharge() {
         Toast.makeText(this, "Start Key Charge", Toast.LENGTH_SHORT).show();
-        transaction.callKeyCharge(this);
+        transactionManager.callKeyCharge(this);
     }
 
     @Override
